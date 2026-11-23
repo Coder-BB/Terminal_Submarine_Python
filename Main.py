@@ -10,22 +10,19 @@ def main():
 
     # Define game specific variables:
     menu = "Main"
+    map = Map("GameMap") # Create a Map object with the specified map file
+    gameRunning = True # Variable to control the main loop
+    prevTime = time() # Store the previous time for FPS calculation
 
     pygame.init() # Initialize the Pygame library
     pygame.display.set_caption(title) # Set the window title
     mainWindow = pygame.display.set_mode((width, height)) # Create the main window with the specified size
 
-    running = True # Variable to control the main loop
-    prevTime = time() # Store the previous time for FPS calculation
-
-    map = Map("NewMap") # Create a Map object with the specified map file
-
     drawGameWindow(mainWindow, width, height, menu, map) # Draw the first game window before entering the main loop
-
-    while running: # Main Game loop
+    while gameRunning: # Main Game loop
         for event in pygame.event.get():
             if event.type == pygame.QUIT: # Check if the user closes window
-                running = False # Exit the main loop
+                gameRunning = False # Exit the main loop
             isKeyPressed, menu = getUserInput(event, menu) # Call the function to handle user input
             if isKeyPressed: # Call the function to draw the game window if a key is pressed
                 drawGameWindow(mainWindow, width, height, menu, map) # Call the function to draw the game window if a key is pressed
@@ -52,13 +49,18 @@ def drawMainMenu(mainWindow, width, height):
     mainWindow.blit(menuText, (width/2 - menuText.get_width()/2, height/2 - menuText.get_height()/2)) # Draw the menu text on the main window at the center of the window
 
 def drawNavigationMenu(mainWindow, width, height, map):
-    font = pygame.font.Font("cour.ttf", 14) # Create a font object with size 20
+    font = pygame.font.Font("cour.ttf", 14) # Create a font object with size 14
+    optionsFont = pygame.font.Font(None, 40) # Create a font object with size 40
     navigationText = font.render(map.returnMap(), True, (255, 255, 255)) # Render the menu textin white color
-    mainWindow.blit(navigationText, (width/2 - navigationText.get_width()/2, height/2 - navigationText.get_height()/2)) # Draw the navigation text on the main window at the center of the window
+    mainWindow.blit(navigationText, (width/2 - navigationText.get_width()/2, 5)) # Draw the navigation text on the main window at the center of the window
+    optionsText = "Press 'b' to return to the main menu\nPress 'w' to set a waypoint"
+    optionsTextSurface = optionsFont.render(optionsText, True, (11, 224, 0)) # Render the options text in green color
+    mainWindow.blit(optionsTextSurface, (width/2 - optionsTextSurface.get_width()/2, navigationText.get_height() + (height - navigationText.get_height())/2 - optionsTextSurface.get_height()/2)) # Draw the options text on the main window at the center of the space below the map.
 
 def getUserInput(event, menu):
     # If no key is pressed, dont update the window.
-    if event.type == pygame.KEYDOWN: # Check if a key is pressed
+    # Check if a key is pressed in the main menu
+    if event.type == pygame.KEYDOWN and menu == "Main":
         if event.key == pygame.K_s: # Identify which key is pressed, what to do, and update the window accordingly.
             print("s key pressed")
         if event.key == pygame.K_n:
@@ -67,6 +69,16 @@ def getUserInput(event, menu):
         if event.key == pygame.K_w:
             print("w key pressed")
         return (True, menu) # If a key is pressed, return True.
+
+    # Check if a key is pressed in the navigation menu
+    if event.type == pygame.KEYDOWN and menu == "Navigation":
+        if event.key == pygame.K_b: # Identify which key is pressed, what to do, and update the window accordingly.
+            print("b key pressed")
+            menu = "Main" # Change the current menu back to the main menu
+        if event.key == pygame.K_w:
+            print("w key pressed")
+        return (True, menu) # If a key is pressed, return True.
+
     return (False, menu) # If no key is pressed, return False.
 
 def drawGameWindow(mainWindow, width, height, menu, map):

@@ -9,7 +9,7 @@ class Map:
         with open("Maps.txt", "r") as file:
             self.maps = file.read().split("***") # The delimiter "***" is used to separate different maps in the file. This will allow for multiple maps to be stored in a single file.
             self.mapRows = [None] * len(self.maps) # Initialize the mapRows list with the same length as the maps
-            self.mapRows = self.maps[0].splitlines() # Grabs the strings from the first map. This will need to be updated to allow for multiple maps in the future.
+            self.mapRows = self.maps[1].splitlines() # Grabs the strings from the first map. This will need to be updated to allow for multiple maps in the future.
 
     def getMapElement(self, row, col):
         return self.mapRows[row][col] # Return the character at the specified row and column in the map
