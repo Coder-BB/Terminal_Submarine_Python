@@ -25,7 +25,10 @@ def main():
                 gameRunning = False # Exit the main loop
             isKeyPressed, menu = getUserInput(event, menu) # Call the function to handle user input
             if isKeyPressed: # Call the function to draw the game window if a key is pressed
-                drawGameWindow(mainWindow, width, height, menu, map) # Call the function to draw the game window if a key is pressed
+                if menu == "Quit": # Check if the current menu is the quit menu
+                    gameRunning = False # Exit the main loop
+                else:
+                    drawGameWindow(mainWindow, width, height, menu, map) # Call the function to draw the game window if a key is pressed
 
         # Handle FPS
         currentTime = time() # Get the current time
@@ -49,7 +52,9 @@ def drawMainMenu(mainWindow, width, height):
     mainWindow.blit(menuText, (width/2 - menuText.get_width()/2, height/2 - menuText.get_height()/2)) # Draw the menu text on the main window at the center of the window
 
 def drawNavigationMenu(mainWindow, width, height, map):
-    font = pygame.font.Font("cour.ttf", 14) # Create a font object with size 14
+    # font = pygame.font.Font("cour.ttf", 14) # Create a font object with size 14
+    # font = pygame.font.SysFont("couriernew", 14) # Create a font object with size 14
+    font = pygame.font.SysFont("lucidaconsole", 14) # Create a font object with size 14
     optionsFont = pygame.font.Font(None, 40) # Create a font object with size 40
     navigationText = font.render(map.returnMap(), True, (255, 255, 255)) # Render the menu textin white color
     mainWindow.blit(navigationText, (width/2 - navigationText.get_width()/2, 5)) # Draw the navigation text on the main window at the center of the window
@@ -68,6 +73,9 @@ def getUserInput(event, menu):
             menu = "Navigation" # Change the current menu to the navigation menu
         if event.key == pygame.K_w:
             print("w key pressed")
+        if event.key == pygame.K_q:
+            print("q key pressed")
+            menu = "Quit" # Change the current menu to the quit menu
         return (True, menu) # If a key is pressed, return True.
 
     # Check if a key is pressed in the navigation menu
